@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Multi-Agent Research Assistant — AI-powered research pipeline with autonomous planning, research, critique, fact-checking, and writing agents.">
+  <title>Multi-Agent Research Assistant</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Highlight.js (dark theme) -->
+  <link id="highlightTheme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- Marked.js (Markdown renderer) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+
+  <!-- DOMPurify (HTML Sanitizer) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
+
+  <!-- App Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- ===== Header ===== -->
+    <header class="app-header">
+      <div class="theme-toggle-container">
+        <button id="btnThemeToggle" class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+      <h1>Multi-Agent Research Assistant</h1>
+      <p class="subtitle">Autonomous AI pipeline - plan, research, critique, verify, and write</p>
+    </header>
+
+    <!-- ===== Input Section ===== -->
+    <section class="input-section glass-panel" aria-label="Research input">
+      <div class="input-group">
+        <textarea
+          id="topicInput"
+          class="topic-textarea"
+          placeholder="Enter a research topic… e.g. &quot;The impact of quantum computing on modern cryptography&quot;"
+          rows="3"
+          aria-label="Research topic"
+        ></textarea>
+
+        <div class="input-controls">
+          <div class="mode-toggle">
+            <span class="label">Mode</span>
+            <div class="toggle-switch" role="radiogroup" aria-label="Research mode">
+              <button
+                id="modeAuto"
+                class="toggle-option active"
+                role="radio"
+                aria-checked="true"
+                data-mode="auto"
+              >Auto</button>
+              <button
+                id="modeApproval"
+                class="toggle-option"
+                role="radio"
+                aria-checked="false"
+                data-mode="approval"
+              >Approval</button>
+            </div>
+          </div>
+
+          <div class="submit-group">
+            <button id="btnSubmit" class="btn-submit" type="button">
+              <span class="spinner"></span>
+              <span class="btn-text">Start Research</span>
+            </button>
+            <button id="btnCancel" class="btn-cancel" type="button">
+              <span class="btn-text">Cancel</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Pipeline Visualization ===== -->
+    <section class="pipeline-section glass-panel" aria-label="Agent pipeline">
+      <div class="pipeline-header-container">
+        <div class="pipeline-title">Agent Pipeline</div>
+        <div class="timer-container" id="timerContainer" style="display: none;">
+          <span class="timer-icon">⏱️</span> <span id="sessionTimer">00:00</span>
+        </div>
+      </div>
+      <div class="progress-bar-container" id="progressBarContainer" style="display: none;">
+        <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+      </div>
+      <div class="pipeline-track" id="pipelineTrack">
+
+        <!-- Planner -->
+        <div class="agent-node" data-agent="planner" id="node-planner">
+          <div class="agent-icon">
+            <span class="icon-inner">🗺️</span>
+            <span class="agent-status-dot"></span>
+          </div>
+          <span class="agent-name">Planner</span>
+        </div>
+
+        <div class="pipeline-connector" id="conn-0">
+          <span class="connector-line"></span>
+          <span class="connector-arrow"></span>
+        </div>
+
+        <!-- Researcher -->
+        <div class="agent-node" data-agent="researcher" id="node-researcher">
+          <div class="agent-icon">
+            <span class="icon-inner">🔍</span>
+            <span class="agent-status-dot"></span>
+          </div>
+          <span class="agent-name">Researcher</span>
+        </div>
+
+        <div class="pipeline-connector" id="conn-1">
+          <span class="connector-line"></span>
+          <span class="connector-arrow"></span>
+        </div>
+
+        <!-- Critic -->
+        <div class="agent-node" data-agent="critic" id="node-critic">
+          <div class="agent-icon">
+            <span class="icon-inner">⚖️</span>
+            <span class="agent-status-dot"></span>
+          </div>
+          <span class="agent-name">Critic</span>
+        </div>
+
+        <div class="pipeline-connector" id="conn-2">
+          <span class="connector-line"></span>
+          <span class="connector-arrow"></span>
+        </div>
+
+        <!-- Fact-Checker -->
+        <div class="agent-node" data-agent="fact_checker" id="node-fact_checker">
+          <div class="agent-icon">
+            <span class="icon-inner">✅</span>
+            <span class="agent-status-dot"></span>
+          </div>
+          <span class="agent-name">Fact-Check</span>
+        </div>
+
+        <div class="pipeline-connector" id="conn-3">
+          <span class="connector-line"></span>
+          <span class="connector-arrow"></span>
+        </div>
+
+        <!-- Writer -->
+        <div class="agent-node" data-agent="writer" id="node-writer">
+          <div class="agent-icon">
+            <span class="icon-inner">✍️</span>
+            <span class="agent-status-dot"></span>
+          </div>
+          <span class="agent-name">Writer</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== Activity Feed ===== -->
+    <section class="activity-section glass-panel" aria-label="Agent activity feed">
+      <div class="section-header">
+        <span class="section-title">
+          <span class="live-dot" id="liveDot"></span>
+          Activity Feed
+        </span>
+      </div>
+      <div class="activity-feed" id="activityFeed"></div>
+    </section>
+
+    <!-- ===== Approval Panel ===== -->
+    <section class="approval-section glass-panel" id="approvalPanel" aria-label="Approval required">
+      <div class="section-header">
+        <span class="section-title">⏸ Approval Required</span>
+      </div>
+      <div class="approval-content" id="approvalContent">
+        <div id="approvalText" class="approval-text-rendered"></div>
+      </div>
+      <div class="approval-actions">
+        <button id="btnApprove" class="btn-approve" type="button">✓ Approve</button>
+        <button id="btnReject" class="btn-reject" type="button">✕ Reject</button>
+      </div>
+    </section>
+
+    <!-- ===== Report Panel ===== -->
+    <section class="report-section glass-panel" id="reportPanel" aria-label="Research report">
+      <div class="section-header">
+        <span class="section-title">📄 Research Report</span>
+      </div>
+      <div class="report-toolbar">
+        <button id="btnDownloadMd" class="btn-download" type="button">⬇ Markdown</button>
+        <button id="btnDownloadPdf" class="btn-download" type="button">⬇ PDF</button>
+        <button id="btnDownloadHtml" class="btn-download" type="button">⬇ HTML</button>
+      </div>
+      <div class="report-body">
+        <div class="report-rendered" id="reportRendered"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Error Toast -->
+  <div class="error-toast" id="errorToast"></div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>

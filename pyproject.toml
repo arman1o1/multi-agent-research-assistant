@@ -1,0 +1,50 @@
+[project]
+name = "multi-agent-research-assistant"
+version = "0.1.0"
+description = "A multi-agent research assistant using Google ADK where 5 specialized AI agents collaborate to produce comprehensive, cited research reports."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+dependencies = [
+    "google-adk[db]>=2.2.0",
+    "google-genai",
+    "tavily-python",
+    "duckduckgo-search",
+    "pymupdf",
+    "trafilatura",
+    "fastapi",
+    "uvicorn[standard]",
+    "websockets",
+    "aiosqlite",
+    "aiofiles",
+    "python-dotenv",
+    "markdown",
+    "fpdf2",
+    "pydantic-settings",
+    "httpx",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+    "mypy",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::starlette.exceptions.StarletteDeprecationWarning",
+]
+
